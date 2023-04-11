@@ -28,7 +28,9 @@ def get_openai_key() -> Optional[str]:
     OPENAI_API_KEY: Optional[str] = getenv("OPENAI_API_KEY")
     # If not found, get it from user input
     if OPENAI_API_KEY is None or OPENAI_API_KEY == "" or OPENAI_API_KEY == "sk-***":
-        api_key = st.sidebar.text_input("OpenAI API key", placeholder="sk-***", key="api_key")
+        api_key = st.sidebar.text_input(
+            "OpenAI API key", placeholder="sk-***", key="api_key"
+        )
         if api_key != "sk-***" or api_key != "" or api_key is not None:
             OPENAI_API_KEY = api_key
 
@@ -99,7 +101,10 @@ def read_data():
 #
 def show_status():
     st.sidebar.markdown("## Status")
-    if "OPENAI_API_KEY" in st.session_state and st.session_state["OPENAI_API_KEY"] != "":
+    if (
+        "OPENAI_API_KEY" in st.session_state
+        and st.session_state["OPENAI_API_KEY"] != ""
+    ):
         st.sidebar.markdown("🔑  OpenAI API key set")
     if "duckdb_connection" in st.session_state:
         st.sidebar.markdown("📡  Duckdb connection created")
@@ -143,7 +148,7 @@ def duckgpt_sidebar():
 
     # Get OpenAI API key
     openai_key = get_openai_key()
-    if openai_key is None:
+    if openai_key is None or openai_key == "" or openai_key == "sk-***":
         st.write("🔑  OpenAI API key not set")
 
     # Choose data source

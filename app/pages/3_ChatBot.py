@@ -14,7 +14,9 @@ def get_openai_key() -> Optional[str]:
     OPENAI_API_KEY: Optional[str] = getenv("OPENAI_API_KEY")
     # If not found, get it from user input
     if OPENAI_API_KEY is None or OPENAI_API_KEY == "" or OPENAI_API_KEY == "sk-***":
-        api_key = st.sidebar.text_input("OpenAI API key", placeholder="sk-***", key="api_key")
+        api_key = st.sidebar.text_input(
+            "OpenAI API key", placeholder="sk-***", key="api_key"
+        )
         if api_key != "sk-***" or api_key != "" or api_key is not None:
             OPENAI_API_KEY = api_key
 
