@@ -7,7 +7,7 @@ st.set_page_config(
 
 st.markdown("### Select an App from the sidebar:")
 st.markdown("1. DuckGpt: Let GPT query your data using DuckDB")
-st.markdown("2. Stock Prediction: Predict stock price using time series forecasting")
+st.markdown("2. Time Series Forecast: Predict stock price using Prophet")
 st.markdown("3. Chatbot: Chat with GPT-3.5 turbo")
 st.markdown("\n")
 st.markdown(

@@ -21,7 +21,7 @@ RUN pip install -r ${HOME_DIR}/requirements.txt
 # Install project for the `api` and `app` cli commands
 RUN pip install ${HOME_DIR}
 
-USER ${USER}
+# USER ${USER}
 WORKDIR ${HOME_DIR}
 
 COPY scripts /scripts

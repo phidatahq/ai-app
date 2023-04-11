@@ -46,7 +46,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["api", "app", "workspace", "notebooks", "models", "tests"]
+packages = ["api", "app", "workspace", "notebooks", "tests"]
 
 # Update this value if the workspace directory is renamed.
 # [tool.phidata]
