@@ -82,8 +82,8 @@ openapi-schema-pydantic==1.2.4
 packaging==23.0
 pandas==1.5.3
 pathspec==0.11.1
-phidata==1.5.7
-phiterm==1.5.7
+phidata==1.5.9
+phiterm==1.5.9
 pillow==9.5.0
 platformdirs==3.2.0
 pluggy==1.0.0
