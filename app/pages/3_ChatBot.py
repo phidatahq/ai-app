@@ -14,14 +14,12 @@ def get_openai_key() -> Optional[str]:
     OPENAI_API_KEY: Optional[str] = getenv("OPENAI_API_KEY")
     # If not found, get it from user input
     if OPENAI_API_KEY is None or OPENAI_API_KEY == "" or OPENAI_API_KEY == "sk-***":
-        api_key = st.sidebar.text_input("OpenAI API key", value="sk-***", key="api_key")
-        if api_key != "sk-***":
+        api_key = st.sidebar.text_input("OpenAI API key", placeholder="sk-***", key="api_key")
+        if api_key != "sk-***" or api_key != "" or api_key is not None:
             OPENAI_API_KEY = api_key
-            st.session_state["OPENAI_API_KEY"] = OPENAI_API_KEY
-            environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
     # Store it in session state and environment variable
-    if OPENAI_API_KEY is not None:
+    if OPENAI_API_KEY is not None and OPENAI_API_KEY != "":
         st.session_state["OPENAI_API_KEY"] = OPENAI_API_KEY
         environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
