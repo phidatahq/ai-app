@@ -22,8 +22,6 @@
 
 # ignore storage dir
 storage
-# ignore models dir
-models
 .images
 
 # ignore dist dir
