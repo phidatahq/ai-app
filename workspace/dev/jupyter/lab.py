@@ -33,8 +33,6 @@ dev_jupyter_lab = JupyterLab(
     jupyter_config_file="/usr/local/jupyter/jupyter_lab_config.py",
     # Get the OpenAI API key from the environment if available
     env={"OPENAI_API_KEY": getenv("OPENAI_API_KEY", "")},
-    # Read env variables from env/dev_jupyter_env.yml
-    env_file=ws_settings.ws_root.joinpath("workspace/env/dev_jupyter_env.yml"),
     # Read secrets from secrets/dev_jupyter_secrets.yml
     secrets_file=ws_settings.ws_root.joinpath(
         "workspace/secrets/dev_jupyter_secrets.yml"

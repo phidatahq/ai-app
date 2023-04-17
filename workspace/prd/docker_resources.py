@@ -19,7 +19,7 @@ prd_image = DockerImage(
     use_cache=ws_settings.use_cache,
 )
 
-# -*- DockerConfig containing the prd resources
+# -*- DockerConfig defining the prd resources
 prd_docker_config = DockerConfig(
     env=ws_settings.prd_env,
     network=ws_settings.ws_name,

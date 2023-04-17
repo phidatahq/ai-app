@@ -13,7 +13,7 @@ dev_data_s3_bucket = S3Bucket(
     acl="private",
 )
 
-# -*- AwsConfig containing the dev resources
+# -*- AwsConfig defining the dev resources
 dev_aws_config = AwsConfig(
     env=ws_settings.dev_env,
     resources=AwsResourceGroup(

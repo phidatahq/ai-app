@@ -6,11 +6,11 @@ from redis.commands.search.field import VectorField
 from redis.commands.search.field import TextField, NumericField
 from redis.commands.search.query import Query
 
-from chatbot.config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
+from config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
 
 
 # Get a Redis connection
-def get_redis_connection(host="redis-stack", port="6379", db=0):
+def get_redis_connection(host="redis-stack-container", port="6379", db=0):
     r = Redis(host=host, port=port, db=db, decode_responses=False)
     return r
 

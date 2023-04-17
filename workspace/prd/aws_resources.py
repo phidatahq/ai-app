@@ -67,7 +67,7 @@ prd_fastapi = FastApiServer(
 )
 
 #
-# -*- AwsConfig containing the prd resources
+# -*- AwsConfig defining the prd resources
 #
 prd_aws_config = AwsConfig(
     env=ws_settings.prd_env,
