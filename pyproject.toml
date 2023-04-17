@@ -28,15 +28,15 @@ dependencies = [
   "typer",
   "uvicorn",
   # Project Libraries
-  "redis",
   "openai",
   "prophet",
+  "redis",
+  "requests",
   "termcolor",
   "tiktoken",
   "textract",
   "langchain",
   "streamlit",
-  "scikit-learn",
   "streamlit-chat",
 ]
 
@@ -49,7 +49,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["api", "app", "workspace", "notebooks", "chatbot", "tests"]
+packages = ["api", "app", "assistant", "workspace", "notebooks", "tests"]
 
 # Update this value if the workspace directory is renamed.
 # [tool.phidata]

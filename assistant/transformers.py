@@ -1,15 +1,17 @@
 from typing import Iterator
-from numpy import array, average
+
 import openai
 import pandas as pd
 import numpy as np
+from numpy import array, average
 
-from config import TEXT_EMBEDDING_CHUNK_SIZE, EMBEDDINGS_MODEL
+from settings import assistant_settings
 from database import load_vectors
 
 
 def get_col_average_from_list_of_lists(list_of_lists):
     """Return the average of each column in a list of lists."""
+
     if len(list_of_lists) == 1:
         return list_of_lists[0]
     else:
@@ -18,15 +20,24 @@ def get_col_average_from_list_of_lists(list_of_lists):
         return average_embedding.tolist()
 
 
-# Create embeddings for a text using a tokenizer and an OpenAI engine
+def get_embeddings(text_array, engine):
+    return openai.Engine(id=engine).embeddings(input=text_array)["data"]
 
 
 def create_embeddings_for_text(text, tokenizer):
-    """Return a list of tuples (text_chunk, embedding) and an average embedding for a text."""
-    token_chunks = list(chunks(text, TEXT_EMBEDDING_CHUNK_SIZE, tokenizer))
+    """
+    Create embeddings for a text using a tokenizer and an OpenAI engine.
+    Return a list of tuples (text_chunk, embedding) and an average embedding for a text.
+    """
+
+    token_chunks = list(
+        chunks(text, assistant_settings.text_embedding_chunk_size, tokenizer)
+    )
     text_chunks = [tokenizer.decode(chunk) for chunk in token_chunks]
 
-    embeddings_response = get_embeddings(text_chunks, EMBEDDINGS_MODEL)
+    embeddings_response = get_embeddings(
+        text_chunks, assistant_settings.embeddings_model
+    )
     embeddings = [embedding["embedding"] for embedding in embeddings_response]
     text_embeddings = list(zip(text_chunks, embeddings))
 
@@ -35,14 +46,12 @@ def create_embeddings_for_text(text, tokenizer):
     return (text_embeddings, average_embedding)
 
 
-def get_embeddings(text_array, engine):
-    return openai.Engine(id=engine).embeddings(input=text_array)["data"]
-
-
-# Split a text into smaller chunks of size n, preferably ending at the end of a sentence
 def chunks(text, n, tokenizer):
+    """Split a text into smaller chunks of size n, preferably ending at the end of a sentence."""
+
     tokens = tokenizer.encode(text)
-    """Yield successive n-sized chunks from text."""
+
+    # Yield successive n-sized chunks from text
     i = 0
     while i < len(tokens):
         # Find the nearest end of sentence within a range of 0.5 * n and 1.5 * n tokens
@@ -72,7 +81,7 @@ def handle_file_string(file, tokenizer, redis_conn, text_embedding_field, index_
     clean_file_body_string = (
         file_body_string.replace("  ", " ").replace("\n", "; ").replace(";", " ")
     )
-    #
+
     # Add the filename to the text to embed
     text_to_embed = "Filename is: {}; {}".format(filename, clean_file_body_string)
 
@@ -111,8 +120,9 @@ def handle_file_string(file, tokenizer, redis_conn, text_embedding_field, index_
         print(f"Ran into a problem uploading to Redis: {e}")
 
 
-# Make a class to generate batches for insertion
 class BatchGenerator:
+    """Generates batches of a given size from a DataFrame"""
+
     def __init__(self, batch_size: int = 10) -> None:
         self.batch_size = batch_size
 

@@ -1,32 +1,26 @@
 import openai
-from termcolor import colored
-import streamlit as st
 
-from chatbot.database import get_redis_connection, get_redis_results
-from chatbot.config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME
+from message import Message
+from database import get_redis_connection, get_redis_results
 
-redis_client = get_redis_connection()
+from settings import assistant_settings
 
 
-# A basic class to create a message as a dict for chat
-class Message:
-    def __init__(self, role, content):
-        self.role = role
-        self.content = content
-
-    def message(self):
-        return {"role": self.role, "content": self.content}
-
-
-# New Assistant class to add a vector database call to its responses
 class RetrievalAssistant:
+    """A class to create a chatbot assistant that can retrieve search results from a Redis database
+    # New Assistant class to add a vector database call to its responses
+    """
+
     def __init__(self):
         self.conversation_history = []
+        self.redis_client = get_redis_connection()
 
     def _get_assistant_response(self, prompt):
+        """Get a response from the OpenAI API"""
+
         try:
             completion = openai.ChatCompletion.create(
-                model=CHAT_MODEL, messages=prompt, temperature=0.1
+                model=assistant_settings.chat_model, messages=prompt, temperature=0.1
             )
 
             response_message = Message(
@@ -38,22 +32,25 @@ class RetrievalAssistant:
         except Exception as e:
             return f"Request failed with exception {e}"
 
-    # The function to retrieve Redis search results
     def _get_search_results(self, prompt):
+        """Retrieve search results from Redis database"""
+
         latest_question = prompt
-        search_content = get_redis_results(redis_client, latest_question, INDEX_NAME)[
-            "result"
-        ][0]
+        search_content = get_redis_results(
+            self.redis_client, latest_question, assistant_settings.index_name
+        )["result"][0]
         return search_content
 
     def ask_assistant(self, next_user_prompt):
+        """Ask the assistant a question and return the response"""
+
         [self.conversation_history.append(x) for x in next_user_prompt]
         assistant_response = self._get_assistant_response(self.conversation_history)
 
         # Answer normally unless the trigger sequence is used "searching_for_answers"
         if "searching for answers" in assistant_response["content"].lower():
             question_extract = openai.Completion.create(
-                model=COMPLETIONS_MODEL,
+                model=assistant_settings.completions_model,
                 prompt=f"Extract the user's latest question and the year for that question from this conversation: {self.conversation_history}. Extract it as a sentence stating the Question and Year",
             )
             search_result = self._get_search_results(
@@ -79,6 +76,9 @@ class RetrievalAssistant:
             return assistant_response
 
     def pretty_print_conversation_history(self, colorize_assistant_replies=True):
+        """Print the conversation history in a pretty format"""
+        from termcolor import colored
+
         for entry in self.conversation_history:
             if entry["role"] == "system":
                 pass

@@ -2,7 +2,7 @@ from pydantic import BaseSettings
 
 
 class AppSettings(BaseSettings):
-    """App settings from container environment.
+    """App settings that can be derived using environment variables.
 
     Reference: https://pydantic-docs.helpmanual.io/usage/settings/
     """

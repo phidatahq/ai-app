@@ -4,7 +4,7 @@ from pydantic import BaseSettings, validator
 
 
 class ApiSettings(BaseSettings):
-    """Api settings from container environment.
+    """Api settings that can be derived using environment variables.
 
     Reference: https://pydantic-docs.helpmanual.io/usage/settings/
     """

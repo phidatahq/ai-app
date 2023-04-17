@@ -36,5 +36,5 @@ def create_app() -> FastAPI:
     return app
 
 
-# Create FastAPI App
+# Create FastAPI object
 app = create_app()

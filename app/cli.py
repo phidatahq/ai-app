@@ -64,7 +64,7 @@ def settings():
 
     \b
     Examples:
-    * `app settings`    -> Print Api settings
+    * `app settings`    -> Print App settings
     """
     from app.settings import app_settings
     from app.utils.log import logger
