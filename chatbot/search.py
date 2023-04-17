@@ -1,8 +1,8 @@
 import streamlit as st
 import openai
 
-from database import get_redis_connection, get_redis_results
-from config import INDEX_NAME, COMPLETIONS_MODEL
+from chatbot.database import get_redis_connection, get_redis_results
+from chatbot.config import INDEX_NAME, COMPLETIONS_MODEL
 
 # initialise Redis connection
 

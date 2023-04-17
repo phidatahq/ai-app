@@ -6,7 +6,7 @@ from redis.commands.search.field import VectorField
 from redis.commands.search.field import TextField, NumericField
 from redis.commands.search.query import Query
 
-from config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
+from chatbot.config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
 
 
 # Get a Redis connection
@@ -60,7 +60,10 @@ def load_vectors(client: Redis, input_list, vector_field_name):
 def query_redis(redis_conn, query, index_name, top_k=2):
     ## Creates embedding vector from user query
     embedded_query = np.array(
-        openai.Embedding.create(input=query, model=EMBEDDINGS_MODEL,)["data"][
+        openai.Embedding.create(
+            input=query,
+            model=EMBEDDINGS_MODEL,
+        )["data"][
             0
         ]["embedding"],
         dtype=np.float32,
