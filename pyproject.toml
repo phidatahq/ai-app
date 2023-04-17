@@ -28,13 +28,16 @@ dependencies = [
   "typer",
   "uvicorn",
   # Project Libraries
+  "redis",
   "openai",
   "prophet",
+  "termcolor",
+  "tiktoken",
+  "textract",
   "langchain",
   "streamlit",
   "scikit-learn",
   "streamlit-chat",
-  "yfinance",
 ]
 
 [project.scripts]
@@ -46,7 +49,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["api", "app", "workspace", "notebooks", "tests"]
+packages = ["api", "app", "workspace", "notebooks", "chatbot", "tests"]
 
 # Update this value if the workspace directory is renamed.
 # [tool.phidata]
@@ -80,6 +83,5 @@ module = [
   "pyarrow.*",
   "setuptools.*",
   "streamlit_chat.*",
-  "yfinance.*",
 ]
 ignore_missing_imports = true

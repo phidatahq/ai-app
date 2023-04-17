@@ -8,7 +8,7 @@ from workspace.dev.jupyter.lab import dev_jupyter_lab
 from workspace.settings import ws_settings
 
 #
-# -*- Dev Docker resources
+# -*- Docker resources for the dev environment
 #
 
 # -*- Dev Image
@@ -52,9 +52,7 @@ dev_fastapi = FastApiServer(
     secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/api_secrets.yml"),
 )
 
-#
-# -*- Define Docker resources using the DockerConfig
-#
+# -*- DockerConfig containing the dev resources
 dev_docker_config = DockerConfig(
     env=ws_settings.dev_env,
     network=ws_settings.ws_name,

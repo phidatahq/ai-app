@@ -39,8 +39,4 @@ ws_settings = WorkspaceSettings(
     # build_images=True,
     # Push images after building
     # push_images=True,
-    # Skip cache when building images
-    # skip_image_cache=False,
-    # Force pull images in FROM
-    # force_pull_images=False,
 )

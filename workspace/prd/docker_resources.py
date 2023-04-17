@@ -3,7 +3,7 @@ from phidata.docker.config import DockerConfig, DockerImage
 from workspace.settings import ws_settings
 
 #
-# -*- Production Docker resources
+# -*- Docker resources for the prd environment
 #
 
 # -*- Prd Image
@@ -19,9 +19,7 @@ prd_image = DockerImage(
     use_cache=ws_settings.use_cache,
 )
 
-#
-# -*- Define Docker resources using the DockerConfig
-#
+# -*- DockerConfig containing the prd resources
 prd_docker_config = DockerConfig(
     env=ws_settings.prd_env,
     network=ws_settings.ws_name,

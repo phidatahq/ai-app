@@ -9,7 +9,7 @@ from workspace.prd.docker_config import prd_image
 from workspace.settings import ws_settings
 
 #
-# -*- Production AWS Resources
+# -*- AWS Resources for the prd environment
 #
 
 # -*- Settings
@@ -17,13 +17,13 @@ launch_type = "FARGATE"
 api_key = f"{ws_settings.prd_key}-api"
 app_key = f"{ws_settings.prd_key}-app"
 
-# -*- Define S3 bucket for prd data
+# -*- S3 bucket for prd data
 prd_data_s3_bucket = S3Bucket(
     name=f"{ws_settings.prd_key}-data",
     acl="private",
 )
 
-# -*- Define ECS cluster for running services
+# -*- ECS cluster for running services
 prd_ecs_cluster = EcsCluster(
     name=f"{ws_settings.prd_key}-cluster",
     ecs_cluster_name=ws_settings.prd_key,
@@ -67,7 +67,7 @@ prd_fastapi = FastApiServer(
 )
 
 #
-# -*- Define AWS resources using the AwsConfig
+# -*- AwsConfig containing the prd resources
 #
 prd_aws_config = AwsConfig(
     env=ws_settings.prd_env,

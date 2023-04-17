@@ -4,7 +4,7 @@ from phidata.aws.resource.group import AwsResourceGroup, S3Bucket
 from workspace.settings import ws_settings
 
 #
-# -*- Development AWS Resources
+# -*- AWS Resources for the dev environment
 #
 
 # -*- S3 bucket for dev data
@@ -13,9 +13,7 @@ dev_data_s3_bucket = S3Bucket(
     acl="private",
 )
 
-#
-# -*- Define AWS resources using the AwsConfig
-#
+# -*- AwsConfig containing the dev resources
 dev_aws_config = AwsConfig(
     env=ws_settings.dev_env,
     resources=AwsResourceGroup(
