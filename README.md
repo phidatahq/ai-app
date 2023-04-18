@@ -51,7 +51,7 @@ phi ws up
 
 - Open [localhost:9095](http://localhost:9095) to view the Streamlit App.
 - Open [localhost:9090/docs](http://localhost:9090/docs) to view the FastApi docs.
-- Open [localhost:8888](http://localhost:8888) to view the JupyterLab.
+- Open [localhost:8888](http://localhost:8888) to view JupyterLab UI.
 
 If something fails, try running again with debug logs:
 
