@@ -5,7 +5,7 @@ from phidata.app.streamlit import StreamlitApp
 from phidata.aws.config import AwsConfig
 from phidata.aws.resource.group import AwsResourceGroup, S3Bucket, EcsCluster
 
-from workspace.prd.docker_config import prd_image
+from workspace.prd.docker_resources import prd_image
 from workspace.settings import ws_settings
 
 #

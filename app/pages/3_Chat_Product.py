@@ -1,8 +1,10 @@
+from typing import List
+
 import streamlit as st
 from streamlit_chat import message
 
-from assistant.database import get_redis_connection
 from assistant.chatbot import Chatbot, Message
+from assistant.database import get_redis_connection
 
 # Initialize Redis connection
 redis_client = get_redis_connection()
@@ -10,7 +12,8 @@ redis_client = get_redis_connection()
 # Set instructions for the assistant using a
 # System prompt that requires Question and Year to be extracted from the user
 system_prompt = """
-You are a helpful Formula 1 knowledge base assistant. You need to capture a Question and Year from each customer.
+You are a helpful Formula 1 knowledge base assistant.
+You need to capture a Question and Year from each customer.
 The Question is their query on Formula 1, and the Year is the year of the applicable Formula 1 season.
 Think about this step by step:
 - The user will ask a Question
@@ -29,8 +32,8 @@ Assistant: Searching for answers.
 """
 
 
-def query(question):
-    response = st.session_state["chat"].ask_assistant(question)
+def query(messages: List):
+    response = st.session_state["chat"].ask_assistant(messages)
     return response
 
 
@@ -46,6 +49,7 @@ def chat_main():
 
     if prompt:
         # Initialization
+        messages: List = []
         if "chat" not in st.session_state:
             st.session_state["chat"] = Chatbot()
             messages = []

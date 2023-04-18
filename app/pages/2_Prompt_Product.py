@@ -24,7 +24,8 @@ def prompt_main():
         )
 
         # Build a prompt that provides the original query, the results and asks GPT to summarize them.
-        summary_prompt = """Summarise this result in a bulleted list to answer the search query a customer has sent.
+        summary_prompt = """Summarise the search results in a bulleted list to
+        answer the search query a customer has sent.
         Search query: {}
         Search result: {}
         Summary:

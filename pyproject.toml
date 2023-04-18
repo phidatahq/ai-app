@@ -31,6 +31,7 @@ dependencies = [
   "openai",
   "prophet",
   "redis",
+  "types-redis",
   "requests",
   "termcolor",
   "tiktoken",
