@@ -7,6 +7,6 @@ from api.routes.prompt_routes import prompt_router
 
 v1_router = APIRouter(prefix="/v1")
 v1_router.include_router(status_router)
-v1_router.include_router(agent_router)
 v1_router.include_router(chat_router)
 v1_router.include_router(prompt_router)
+v1_router.include_router(agent_router)

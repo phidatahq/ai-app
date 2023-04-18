@@ -27,7 +27,7 @@ try:
     # -*- Create a DuckDB agent
     duckdb_agent = create_duckdb_agent(duckdb_connection=duckdb_connection)
 except Exception as e:
-    logger.error("Failed to create DuckDB agent: {}".format(e))
+    logger.warning("Failed to create DuckDB agent: {}".format(e))
 
 
 class DuckGptRequest(BaseModel):

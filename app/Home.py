@@ -6,9 +6,9 @@ st.set_page_config(
 )
 
 st.markdown("### Select an App from the sidebar:")
-st.markdown("1. DuckGpt: Use GPT to query your data using DuckDB (AI Agent demo)")
-st.markdown("2. Prompt Product: Build a Prompt based product using your own data")
-st.markdown("3. Chat Product: Build a Chat based product using your own data")
-st.markdown("4. ChatGpt: Chat with GPT-3.5 turbo")
+st.markdown("1. Agent Demo: Use GPT to query your data using a DuckDB AI Agent")
+st.markdown("2. Prompt Demo: Build a Prompt product using your own data")
+st.markdown("3. Chat Demo: Build a Chat product using your own data")
+st.markdown("4. ChatGpt: Chat with GPT-3.5 using the api")
 
 st.sidebar.success("Select an App from above")

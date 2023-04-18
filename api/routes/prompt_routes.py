@@ -10,15 +10,9 @@ from assistant.settings import assistant_settings
 # -*- Create a FastAPI router
 prompt_router = APIRouter(prefix=endpoints.PROMPT, tags=["prompt"])
 
-try:
-    # -*- Create a Redis connection
-    redis_client = get_redis_connection()
-except Exception as e:
-    logger.error("Failed to connect to redis: {}".format(e))
-
 
 class PromptRequest(BaseModel):
-    query: str = "what is the cost cap for a power unit in 2023"
+    message: str
 
 
 class PromptResponse(BaseModel):
@@ -27,9 +21,30 @@ class PromptResponse(BaseModel):
 
 @prompt_router.post("/query", response_model=PromptResponse)
 def prompt_query(prompt_request: PromptRequest):
-    # Get results from redis
+    # -*- Generate Completion
+    completion_result = openai.Completion.create(
+        engine=assistant_settings.completions_model,
+        prompt=prompt_request.message,
+        max_tokens=1024,
+    )
+    logger.info(completion_result)
+
+    # -*- Return response
+    return PromptResponse(output=completion_result["choices"][0]["text"])
+
+
+try:
+    # -*- Create a Redis connection
+    redis_client = get_redis_connection()
+except Exception as e:
+    logger.warning("Failed to connect to redis: {}".format(e))
+
+
+@prompt_router.post("/f1_query", response_model=PromptResponse)
+def f1_query(prompt_request: PromptRequest):
+    # -*- Get query results from redis
     try:
-        query = prompt_request.query
+        query = prompt_request.message
         result_df = get_redis_results(
             redis_client, query, assistant_settings.index_name
         )
@@ -38,6 +53,7 @@ def prompt_query(prompt_request: PromptRequest):
         logger.error(error_msg)
         return PromptResponse(output=error_msg)
 
+    # -*- Create a Summary Prompt
     # Build a prompt that provides the original query, the results and asks GPT to summarize them.
     summary_prompt = """Summarise the search results in a bulleted list to
     answer the search query a customer has sent.
@@ -48,11 +64,12 @@ def prompt_query(prompt_request: PromptRequest):
         query, result_df["result"][0]
     )
 
+    # -*- Generate a summary
     summary = openai.Completion.create(
         engine=assistant_settings.completions_model,
         prompt=summary_prompt,
         max_tokens=500,
     )
 
-    # Response provided by GPT-3
+    # -*- Return response
     return PromptResponse(output=summary["choices"][0]["text"])
