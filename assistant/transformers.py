@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 from numpy import array, average
 
-from settings import assistant_settings
-from database import load_vectors
+from assistant.settings import assistant_settings
+from assistant.database import load_vectors
 
 
 def get_col_average_from_list_of_lists(list_of_lists):
@@ -21,7 +21,8 @@ def get_col_average_from_list_of_lists(list_of_lists):
 
 
 def get_embeddings(text_array, engine):
-    return openai.Engine(id=engine).embeddings(input=text_array)["data"]
+    # See https://platform.openai.com/docs/api-reference/embeddings/create
+    return openai.Embedding.create(input=text_array, model=engine)["data"]
 
 
 def create_embeddings_for_text(text, tokenizer):
@@ -74,7 +75,7 @@ def get_unique_id_for_file_chunk(filename, chunk_index):
 
 
 def handle_file_string(file, tokenizer, redis_conn, text_embedding_field, index_name):
-    filename = file[0]
+    file_path = file[0]
     file_body_string = file[1]
 
     # Clean up the file string by replacing newlines and double spaces and semi-colons
@@ -83,29 +84,29 @@ def handle_file_string(file, tokenizer, redis_conn, text_embedding_field, index_
     )
 
     # Add the filename to the text to embed
-    text_to_embed = "Filename is: {}; {}".format(filename, clean_file_body_string)
+    text_to_embed = "Filename is: {}; {}".format(str(file_path), clean_file_body_string)
 
     # Create embeddings for the text
     try:
         text_embeddings, average_embedding = create_embeddings_for_text(
             text_to_embed, tokenizer
         )
-        # print("[handle_file_string] Created embedding for {}".format(filename))
+        print("[transformer] Created embedding for {}".format(str(file_path)))
     except Exception as e:
-        print("[handle_file_string] Error creating embedding: {}".format(e))
+        print("[transformer] Error creating embedding: {}".format(e))
 
     # Get the vectors array of triples: file_chunk_id, embedding, metadata for each embedding
     # Metadata is a dict with keys: filename, file_chunk_index
     vectors = []
     for i, (text_chunk, embedding) in enumerate(text_embeddings):
-        id = get_unique_id_for_file_chunk(filename, i)
+        id = get_unique_id_for_file_chunk(str(file_path), i)
         vectors.append(
             (
                 {
                     "id": id,
                     "vector": embedding,
                     "metadata": {
-                        "filename": filename,
+                        "filename": str(file_path),
                         "text_chunk": text_chunk,
                         "file_chunk_index": i,
                     },

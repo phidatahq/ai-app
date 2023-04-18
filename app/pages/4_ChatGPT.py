@@ -39,10 +39,10 @@ def show_reload():
 
 
 #
-# -*- ChatBot Sidebar
+# -*- ChatGpt Sidebar
 #
 def chatbot_sidebar():
-    st.sidebar.markdown("# Chatbot")
+    st.sidebar.markdown("# ChatGPT")
 
     # Get OpenAI API key
     openai_key = get_openai_key()
@@ -67,7 +67,7 @@ def generate_response(messages: List[Dict[str, str]]) -> str:
 
 
 #
-# -*- ChatBot Main UI
+# -*- ChatGpt Main UI
 #
 def chatbot_main():
     user_message = st.text_input(
@@ -102,14 +102,10 @@ def chatbot_main():
 
 
 #
-# -*- ChatBot UI
+# -*- ChatGpt UI
 #
-st.markdown("## ChatBot")
-st.write(
-    """This is a chatbot built using OpenAI, customize it to your needs.\n
-    Send it a message and it will respond.
-    """
-)
+st.markdown("## ChatGpt")
+st.write("""Chat with gpt-3.5 using the OpenAI api, customize it to your needs""")
 
 chatbot_sidebar()
 chatbot_main()

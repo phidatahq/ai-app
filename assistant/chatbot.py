@@ -1,15 +1,12 @@
 import openai
 
-from message import Message
-from database import get_redis_connection, get_redis_results
+from assistant.message import Message
+from assistant.database import get_redis_connection, get_redis_results
+from assistant.settings import assistant_settings
 
-from settings import assistant_settings
 
-
-class RetrievalAssistant:
-    """A class to create a chatbot assistant that can retrieve search results from a Redis database
-    # New Assistant class to add a vector database call to its responses
-    """
+class Chatbot:
+    """A class to create a chatbot assistant that can retrieve search results from a Redis database"""
 
     def __init__(self):
         self.conversation_history = []
