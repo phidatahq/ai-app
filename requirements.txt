@@ -86,8 +86,8 @@ packaging==23.0
 pandas==1.5.3
 pathspec==0.11.1
 pdfminer-six==20191110
-phidata==1.6.0
-phiterm==1.6.0
+phidata==1.6.1
+phiterm==1.6.1
 pillow==9.5.0
 platformdirs==3.2.0
 pluggy==1.0.0
