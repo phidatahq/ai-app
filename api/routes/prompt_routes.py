@@ -21,7 +21,7 @@ class PromptResponse(BaseModel):
 
 @prompt_router.post("/query", response_model=PromptResponse)
 def prompt_query(prompt_request: PromptRequest):
-    # -*- Generate Completion
+    # -*- Generate completion
     completion_result = openai.Completion.create(
         engine=assistant_settings.completions_model,
         prompt=prompt_request.message,
@@ -29,7 +29,7 @@ def prompt_query(prompt_request: PromptRequest):
     )
     logger.info(completion_result)
 
-    # -*- Return response
+    # -*- Return result
     return PromptResponse(output=completion_result["choices"][0]["text"])
 
 
@@ -42,7 +42,7 @@ except Exception as e:
 
 @prompt_router.post("/f1_query", response_model=PromptResponse)
 def f1_query(prompt_request: PromptRequest):
-    # -*- Get query results from redis
+    # -*- Get results from redis
     try:
         query = prompt_request.message
         result_df = get_redis_results(
@@ -64,12 +64,12 @@ def f1_query(prompt_request: PromptRequest):
         query, result_df["result"][0]
     )
 
-    # -*- Generate a summary
+    # -*- Generate completion
     summary = openai.Completion.create(
         engine=assistant_settings.completions_model,
         prompt=summary_prompt,
         max_tokens=500,
     )
 
-    # -*- Return response
+    # -*- Return result
     return PromptResponse(output=summary["choices"][0]["text"])

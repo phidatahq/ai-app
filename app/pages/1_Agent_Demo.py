@@ -25,27 +25,27 @@ Tables = {
 #
 def get_openai_key() -> Optional[str]:
     # Get OpenAI API key from environment variable
-    OPENAI_API_KEY: Optional[str] = getenv("OPENAI_API_KEY")
+    openai_key: Optional[str] = getenv("OPENAI_API_KEY")
     # If not found, get it from user input
-    if OPENAI_API_KEY is None or OPENAI_API_KEY == "" or OPENAI_API_KEY == "sk-***":
+    if openai_key is None or openai_key == "" or openai_key == "sk-***":
         api_key = st.sidebar.text_input(
             "OpenAI API key", placeholder="sk-***", key="api_key"
         )
         if api_key != "sk-***" or api_key != "" or api_key is not None:
-            OPENAI_API_KEY = api_key
+            openai_key = api_key
 
     # Store it in session state and environment variable
-    if OPENAI_API_KEY is not None and OPENAI_API_KEY != "":
-        st.session_state["OPENAI_API_KEY"] = OPENAI_API_KEY
-        environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+    if openai_key is not None and openai_key != "":
+        st.session_state["OPENAI_API_KEY"] = openai_key
+        environ["OPENAI_API_KEY"] = openai_key
 
-    return OPENAI_API_KEY
+    return openai_key
 
 
 #
 # -*- Sidebar component to get S3 data path
 #
-def get_input_data_path() -> None:
+def select_data_source() -> None:
     # Get the data source
     input_data_source = st.sidebar.radio(
         "Select Data Source", options=["Table", "S3 Path"]
@@ -144,7 +144,7 @@ def show_reload():
 # -*- DuckGpt Sidebar
 #
 def duckgpt_sidebar():
-    st.sidebar.markdown("# DuckGpt")
+    st.sidebar.markdown("# Settings")
 
     # Get OpenAI API key
     openai_key = get_openai_key()
@@ -152,7 +152,7 @@ def duckgpt_sidebar():
         st.write("🔑  OpenAI API key not set")
 
     # Choose data source
-    get_input_data_path()
+    select_data_source()
 
     # Read data
     read_data()
@@ -259,11 +259,10 @@ def duckgpt_main():
 #
 # -*- DuckGpt UI
 #
-st.markdown("## DuckGpt")
+st.set_page_config(page_title="AI Agent", page_icon="🔎", layout="wide")
+st.markdown("## Build an AI Agent to query DuckDB")
 st.write(
-    """DuckGpt uses OpenAI, DuckDb and Langchain to interact with tables stored on s3.\n
-    Read a table, send a message and it will respond.
-    """
+    "DuckGpt uses OpenAI and Langchain to interact with data stored on s3 using DuckDb. Read a table and send a message"  # noqa: E501
 )
 
 duckgpt_sidebar()
