@@ -5,8 +5,8 @@ from pydantic import BaseModel
 from phidata.utils.log import logger
 
 from api.routes.endpoints import endpoints
-from assistant.chatbot import Chatbot, Message
-from assistant.database import get_redis_connection
+from utils.chatbot import Chatbot, Message
+from utils.database import get_redis_connection
 
 # -*- Create a FastAPI routerwarning
 chat_router = APIRouter(prefix=endpoints.CHAT, tags=["chat"])

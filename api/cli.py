@@ -32,11 +32,11 @@ def start(
     """
     import uvicorn
     from api.settings import api_settings
-    from api.utils.log import logger
+    from utils.log import logger
 
     logger.info("Starting Api")
     uvicorn.run(
-        "api.app:app",
+        "api.main:app",
         host=api_settings.host,
         port=api_settings.port,
         reload=reload,
@@ -54,7 +54,7 @@ def settings():
     * `api settings`    -> Print Api settings
     """
     from api.settings import api_settings
-    from api.utils.log import logger
+    from utils.log import logger
 
     logger.info("Api Settings:")
     logger.info(api_settings.json(indent=2))

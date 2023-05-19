@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from phidata.utils.log import logger
 
 from api.routes.endpoints import endpoints
-from assistant.database import get_redis_connection, get_redis_results
-from assistant.settings import assistant_settings
+from utils.database import get_redis_connection, get_redis_results
+from utils.settings import assistant_settings
 
 # -*- Create a FastAPI router
 prompt_router = APIRouter(prefix=endpoints.PROMPT, tags=["prompt"])

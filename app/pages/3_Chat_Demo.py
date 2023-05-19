@@ -4,8 +4,8 @@ from typing import Optional, Any, List
 import streamlit as st
 from streamlit_chat import message
 
-from assistant.chatbot import Chatbot, Message
-from assistant.database import get_redis_connection
+from utils.chatbot import Chatbot, Message
+from utils.database import get_redis_connection
 
 
 #

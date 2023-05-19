@@ -32,7 +32,7 @@ def start(
 
     from pathlib import Path
     from app.settings import app_settings
-    from app.utils.log import logger
+    from utils.log import logger
 
     app_dir = Path(__file__).parent.resolve()
     app_file = app_dir.joinpath(f"{name}.py")
@@ -67,7 +67,7 @@ def settings():
     * `app settings`    -> Print App settings
     """
     from app.settings import app_settings
-    from app.utils.log import logger
+    from utils.log import logger
 
     logger.info("App Settings:")
     logger.info(app_settings.json(indent=2))

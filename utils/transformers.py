@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 from numpy import array, average
 
-from assistant.settings import assistant_settings
-from assistant.database import load_vectors
+from utils.settings import assistant_settings
+from utils.database import load_vectors
 
 
 def get_col_average_from_list_of_lists(list_of_lists):

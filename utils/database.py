@@ -7,7 +7,7 @@ from redis.commands.search.field import VectorField
 from redis.commands.search.field import TextField, NumericField
 from redis.commands.search.query import Query
 
-from assistant.settings import assistant_settings
+from utils.settings import assistant_settings
 
 # from workspace.dev.docker_resources import dev_redis
 

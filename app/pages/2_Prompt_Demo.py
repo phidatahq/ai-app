@@ -4,8 +4,8 @@ from typing import Optional, Any
 import openai
 import streamlit as st
 
-from assistant.database import get_redis_connection, get_redis_results
-from assistant.settings import assistant_settings
+from utils.database import get_redis_connection, get_redis_results
+from utils.settings import assistant_settings
 
 
 #

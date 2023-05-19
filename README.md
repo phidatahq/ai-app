@@ -7,11 +7,13 @@ This repo contains the code for running an AI App in 2 environments:
 
 ## Setup Workspace
 
+> from the `ai-app` dir:
+
 1. Create + activate a virtual env:
 
 ```sh
-python3 -m venv ~/.venvs/aienv
-source ~/.venvs/aienv/bin/activate
+python3 -m venv .venv/aienv
+source .venv/aienv/bin/activate
 ```
 
 2. Install `phidata`:
@@ -19,8 +21,6 @@ source ~/.venvs/aienv/bin/activate
 ```sh
 pip install phidata
 ```
-
-> from the `ai-app` dir:
 
 3. Setup workspace:
 

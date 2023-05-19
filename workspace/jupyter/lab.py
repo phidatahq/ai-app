@@ -10,7 +10,7 @@ from workspace.settings import ws_settings
 #
 
 # -*- Jupyter image
-dev_jupyter_image = DockerImage(
+jupyter_image = DockerImage(
     name=f"{ws_settings.image_repo}/jupyter-{ws_settings.ws_name}",
     tag=ws_settings.dev_env,
     enabled=(ws_settings.build_images and ws_settings.dev_jupyter_enabled),
@@ -27,7 +27,7 @@ dev_jupyter_image = DockerImage(
 dev_jupyter_lab = JupyterLab(
     name="jupyter-lab",
     enabled=ws_settings.dev_jupyter_enabled,
-    image=dev_jupyter_image,
+    image=jupyter_image,
     mount_workspace=True,
     # The jupyter_lab_config file is mounted when creating the image
     jupyter_config_file="/usr/local/jupyter/jupyter_lab_config.py",

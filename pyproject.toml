@@ -18,7 +18,7 @@ dependencies = [
   "pytest",
   # Linting
   "ruff",
-  "phidata==1.6.6",
+  "phidata==1.6.7",
   # Libraries for data processing
   "pandas",
   "polars",
@@ -50,7 +50,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["api", "app", "assistant", "workspace", "notebooks", "tests"]
+packages = ["api", "app", "notebooks", "tests", "utils", "workspace"]
 
 # Change this value to use a different directory for the phidata workspace.
 # [tool.phidata]

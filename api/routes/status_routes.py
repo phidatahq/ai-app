@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from api.routes.endpoints import endpoints
-from api.utils.dttm import current_utc_str
+from utils.dttm import current_utc_str
 
 ######################################################
 ## Router for Health Checks

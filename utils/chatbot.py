@@ -1,8 +1,8 @@
 import openai
 
-from assistant.message import Message
-from assistant.database import get_redis_connection, get_redis_results
-from assistant.settings import assistant_settings
+from utils.message import Message
+from utils.database import get_redis_connection, get_redis_results
+from utils.settings import assistant_settings
 
 
 class Chatbot:

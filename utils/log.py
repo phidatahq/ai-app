@@ -21,4 +21,4 @@ def build_logger(logger_name: str) -> logging.Logger:
     return _logger
 
 
-logger: logging.Logger = build_logger("api")
+logger: logging.Logger = build_logger("ai-app")
