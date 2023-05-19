@@ -22,6 +22,12 @@ if [[ "$WAIT_FOR_DB" = true || "$WAIT_FOR_DB" = True ]]; then
     -timeout 300s
 fi
 
+if [[ "$WAIT_FOR_REDIS" = true || "$WAIT_FOR_REDIS" = True ]]; then
+  dockerize \
+    -wait tcp://$REDIS_HOST:$REDIS_PORT \
+    -timeout 300s
+fi
+
 ############################################################################
 # Install dependencies
 ############################################################################

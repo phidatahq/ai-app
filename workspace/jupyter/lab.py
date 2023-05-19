@@ -16,7 +16,7 @@ dev_jupyter_image = DockerImage(
     enabled=(ws_settings.build_images and ws_settings.dev_jupyter_enabled),
     path=str(ws_settings.ws_root),
     # platform="linux/amd64",
-    dockerfile="workspace/dev/jupyter/jupyter.Dockerfile",
+    dockerfile="workspace/jupyter/jupyter.Dockerfile",
     pull=ws_settings.force_pull_images,
     push_image=ws_settings.push_images,
     skip_docker_cache=ws_settings.skip_image_cache,
@@ -25,7 +25,7 @@ dev_jupyter_image = DockerImage(
 
 # -*- JupyterLab running on port 8888
 dev_jupyter_lab = JupyterLab(
-    name=f"{ws_settings.ws_name}-lab",
+    name="jupyter-lab",
     enabled=ws_settings.dev_jupyter_enabled,
     image=dev_jupyter_image,
     mount_workspace=True,

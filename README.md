@@ -14,11 +14,10 @@ python3 -m venv ~/.venvs/aienv
 source ~/.venvs/aienv/bin/activate
 ```
 
-2. Install + init `phidata`:
+2. Install `phidata`:
 
 ```sh
 pip install phidata
-phi init -l
 ```
 
 > from the `ai-app` dir:
@@ -43,7 +42,11 @@ cp example.env .env
 
 ## Run AI App locally using docker
 
-The [workspace/dev](workspace/dev) directory contains the resources for the dev environment. Install [docker desktop](https://www.docker.com/products/docker-desktop) and run dev resources using:
+The [workspace/dev_resources.py](workspace/dev_resources.py) file contains the code for the dev resources.
+
+1. Install [docker desktop](https://www.docker.com/products/docker-desktop)
+
+2. Start the workspace using:
 
 ```sh
 phi ws up

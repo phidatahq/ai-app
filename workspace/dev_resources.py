@@ -6,14 +6,14 @@ from phidata.app.redis.stack import RedisStack
 from phidata.docker.config import DockerConfig
 from phidata.docker.resource.image import DockerImage
 
-from workspace.dev.jupyter.lab import dev_jupyter_lab
+from workspace.jupyter.lab import dev_jupyter_lab
 from workspace.settings import ws_settings
 
 #
-# -*- Docker resources for the dev environment
+# -*- Resources for the Development Environment
 #
 
-# -*- Dev Image
+# -*- Development Image
 dev_image = DockerImage(
     name=f"{ws_settings.image_repo}/{ws_settings.ws_name}",
     tag=ws_settings.dev_env,
@@ -28,7 +28,7 @@ dev_image = DockerImage(
 
 # -*- StreamlitApp running on port 9095
 dev_streamlit = StreamlitApp(
-    name=f"{ws_settings.ws_name}-app",
+    name="ai-app-dev",
     enabled=ws_settings.dev_app_enabled,
     image=dev_image,
     command="app start Home",
@@ -42,7 +42,7 @@ dev_streamlit = StreamlitApp(
 
 # -*- FastApiServer running on port 9090
 dev_fastapi = FastApiServer(
-    name=f"{ws_settings.ws_name}-api",
+    name="ai-api-dev",
     enabled=ws_settings.dev_api_enabled,
     image=dev_image,
     command="api start -r",

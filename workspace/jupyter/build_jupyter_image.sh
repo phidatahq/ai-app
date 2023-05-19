@@ -5,7 +5,7 @@ set -e
 CURR_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DOCKER_FILE="${CURR_SCRIPT_DIR}/jupyter.Dockerfile"
 REPO="repo"
-NAME="jupyter-ai001"
+NAME="jupyter-ai-app"
 TAG="dev"
 
 # Run docker buildx create --use before running this script

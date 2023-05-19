@@ -1,25 +1,24 @@
 FROM phidata/python:3.9.12
 
 ARG USER=server
-ARG HOME_DIR=${USER_LOCAL_DIR}/${USER}
-ENV HOME_DIR=${HOME_DIR}
-# Add HOME_DIR to PYTHONPATH
-ENV PYTHONPATH="${HOME_DIR}:${PYTHONPATH}"
+ARG APP_DIR=${USER_LOCAL_DIR}/${USER}
+ENV APP_DIR=${APP_DIR}
+# Add APP_DIR to PYTHONPATH
+ENV PYTHONPATH="${APP_DIR}:${PYTHONPATH}"
 
 # Create user and home directory
 RUN groupadd -g 61000 ${USER} \
-  && useradd -g 61000 -u 61000 -ms /bin/bash -d ${HOME_DIR} ${USER}
+  && useradd -g 61000 -u 61000 -ms /bin/bash -d ${APP_DIR} ${USER}
 
-COPY . ${HOME_DIR}
+COPY . ${APP_DIR}
 # Update pip
 RUN pip install --upgrade pip
 # Install pinned requirements
-RUN pip install -r ${HOME_DIR}/requirements.txt
+RUN pip install -r ${APP_DIR}/requirements.txt
 # Install project for the `api` and `app` cli commands
-RUN pip install ${HOME_DIR}
+RUN pip install ${APP_DIR}
 
-# USER ${USER}
-WORKDIR ${HOME_DIR}
+WORKDIR ${APP_DIR}
 
 COPY scripts /scripts
 ENTRYPOINT ["/scripts/entrypoint.sh"]

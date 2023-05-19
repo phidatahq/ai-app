@@ -4,7 +4,7 @@
 #
 # Create Virtual Environment & Install Requirements
 # Usage:
-#   ./scripts/setup_venv.sh
+#   ./scripts/create_venv.sh
 ############################################################################
 
 CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
