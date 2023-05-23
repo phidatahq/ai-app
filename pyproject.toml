@@ -18,7 +18,7 @@ dependencies = [
   "pytest",
   # Linting
   "ruff",
-  "phidata==1.6.7",
+  "phidata==1.6.11",
   # Libraries for data processing
   "pandas",
   "polars",
@@ -39,6 +39,8 @@ dependencies = [
   "langchain",
   "streamlit",
   "streamlit-chat",
+  # Pin for dependency resolution
+  "cryptography==39.0.2",
 ]
 
 [project.scripts]
