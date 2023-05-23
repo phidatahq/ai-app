@@ -18,7 +18,7 @@ dependencies = [
   "pytest",
   # Linting
   "ruff",
-  "phidata==1.6.12",
+  "phidata==1.6.14",
   # Libraries for data processing
   "pandas",
   "polars",
@@ -29,7 +29,6 @@ dependencies = [
   "uvicorn",
   # Project Libraries
   "openai",
-  "prophet",
   "redis",
   "types-redis",
   "requests",
@@ -83,7 +82,6 @@ module = [
   "redis.*",
   "pandas.*",
   "phidata.*",
-  "prophet.*",
   "pyarrow.*",
   "setuptools.*",
   "streamlit_chat.*",
