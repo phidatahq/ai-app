@@ -10,15 +10,19 @@ ENV PYTHONPATH="${APP_DIR}:${PYTHONPATH}"
 RUN groupadd -g 61000 ${USER} \
   && useradd -g 61000 -u 61000 -ms /bin/bash -d ${APP_DIR} ${USER}
 
-COPY . ${APP_DIR}
+WORKDIR ${APP_DIR}
+
 # Update pip
 RUN pip install --upgrade pip
+# Copy pinned requirements
+COPY requirements.txt .
 # Install pinned requirements
-RUN pip install -r ${APP_DIR}/requirements.txt
+RUN pip install -r requirements.txt
+
+# Copy project files
+COPY . .
 # Install project for the `api` and `app` cli commands
 RUN pip install ${APP_DIR}
-
-WORKDIR ${APP_DIR}
 
 COPY scripts /scripts
 ENTRYPOINT ["/scripts/entrypoint.sh"]

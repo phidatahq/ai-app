@@ -1,18 +1,21 @@
+from typing import List
+
 import openai
 from fastapi import APIRouter
 from pydantic import BaseModel
 from phidata.utils.log import logger
 
 from api.routes.endpoints import endpoints
-from utils.database import get_redis_connection, get_redis_results
-from utils.settings import assistant_settings
+from utils.message import Message
 
 # -*- Create a FastAPI router
 prompt_router = APIRouter(prefix=endpoints.PROMPT, tags=["prompt"])
 
 
 class PromptRequest(BaseModel):
-    message: str
+    query: str
+    max_tokens: int = 1024
+    temperature: float = 0
 
 
 class PromptResponse(BaseModel):
@@ -21,55 +24,27 @@ class PromptResponse(BaseModel):
 
 @prompt_router.post("/query", response_model=PromptResponse)
 def prompt_query(prompt_request: PromptRequest):
-    # -*- Generate completion
-    completion_result = openai.Completion.create(
-        engine=assistant_settings.completions_model,
-        prompt=prompt_request.message,
-        max_tokens=1024,
-    )
-    logger.info(completion_result)
+    # -*- Create a System Prompt
+    system_prompt = "You are a helpful assistant that helps customers answer questions."
 
-    # -*- Return result
-    return PromptResponse(output=completion_result["choices"][0]["text"])
+    # -*- Add the System Prompt to the conversation
+    messages: List = []
+    system_message = Message("system", system_prompt)
+    messages.append(system_message.message())
 
-
-try:
-    # -*- Create a Redis connection
-    redis_client = get_redis_connection()
-except Exception as e:
-    logger.warning("Failed to connect to redis: {}".format(e))
-
-
-@prompt_router.post("/f1_query", response_model=PromptResponse)
-def f1_query(prompt_request: PromptRequest):
-    # -*- Get results from redis
-    try:
-        query = prompt_request.message
-        result_df = get_redis_results(
-            redis_client, query, assistant_settings.index_name
-        )
-    except Exception as e:
-        error_msg = "Failed to get results from redis: {}".format(e)
-        logger.error(error_msg)
-        return PromptResponse(output=error_msg)
-
-    # -*- Create a Summary Prompt
-    # Build a prompt that provides the original query, the results and asks GPT to summarize them.
-    summary_prompt = """Summarise the search results in a bulleted list to
-    answer the search query a customer has sent.
-    Search query: {}
-    Search result: {}
-    Summary:
-    """.format(
-        query, result_df["result"][0]
-    )
+    # -*- Add the user query to the conversation
+    user_message = Message("user", prompt_request.query)
+    messages.append(user_message.message())
 
     # -*- Generate completion
-    summary = openai.Completion.create(
-        engine=assistant_settings.completions_model,
-        prompt=summary_prompt,
-        max_tokens=500,
+    completion_result = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
+        max_tokens=prompt_request.max_tokens,
+        temperature=prompt_request.temperature,
     )
+    result = completion_result["choices"][0]["message"]["content"]
+    logger.info(result)
 
     # -*- Return result
-    return PromptResponse(output=summary["choices"][0]["text"])
+    return PromptResponse(output=result)

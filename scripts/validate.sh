@@ -2,11 +2,10 @@
 
 ############################################################################
 #
-# To validate the workspace, run this script from the root directory:
-# 1. Format using black
-# 2. Type check using mypy
-# 3. Test using pytest
-# 4. Lint using ruff
+# Run this script to validate the workspace:
+# 1. Type check using mypy
+# 2. Test using pytest
+# 3. Lint using ruff
 # Usage:
 #   ./scripts/validate.sh
 ############################################################################
@@ -17,8 +16,6 @@ source ${CURR_DIR}/_utils.sh
 
 main() {
   print_heading "Validating workspace..."
-  print_heading "Running: black ${REPO_ROOT}"
-  black ${REPO_ROOT}
   print_heading "Running: mypy ${REPO_ROOT}"
   mypy ${REPO_ROOT}
   print_heading "Running: pytest ${REPO_ROOT}"

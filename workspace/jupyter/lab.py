@@ -1,6 +1,6 @@
 from os import getenv
 
-from phidata.app.jupyter import JupyterLab
+from phidata.app.jupyter import Jupyter
 from phidata.docker.resource.image import DockerImage
 
 from workspace.settings import ws_settings
@@ -15,27 +15,22 @@ jupyter_image = DockerImage(
     tag=ws_settings.dev_env,
     enabled=(ws_settings.build_images and ws_settings.dev_jupyter_enabled),
     path=str(ws_settings.ws_root),
-    # platform="linux/amd64",
     dockerfile="workspace/jupyter/jupyter.Dockerfile",
     pull=ws_settings.force_pull_images,
-    push_image=ws_settings.push_images,
     skip_docker_cache=ws_settings.skip_image_cache,
-    use_cache=ws_settings.use_cache,
 )
 
-# -*- JupyterLab running on port 8888
-dev_jupyter_lab = JupyterLab(
-    name="jupyter-lab",
+# -*- Jupyter running on port 8888
+dev_jupyter = Jupyter(
+    name="ai-jupyter",
     enabled=ws_settings.dev_jupyter_enabled,
     image=jupyter_image,
     mount_workspace=True,
-    # The jupyter_lab_config file is mounted when creating the image
-    jupyter_config_file="/usr/local/jupyter/jupyter_lab_config.py",
     # Get the OpenAI API key from the environment if available
     env={"OPENAI_API_KEY": getenv("OPENAI_API_KEY", "")},
+    use_cache=ws_settings.use_cache,
     # Read secrets from secrets/dev_jupyter_secrets.yml
     secrets_file=ws_settings.ws_root.joinpath(
         "workspace/secrets/dev_jupyter_secrets.yml"
     ),
-    use_cache=ws_settings.use_cache,
 )

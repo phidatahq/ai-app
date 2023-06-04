@@ -16,24 +16,21 @@ ws_settings = WorkspaceSettings(
     dev_app_enabled=True,
     dev_api_enabled=True,
     dev_jupyter_enabled=True,
-    dev_redis_enabled=True,
+    dev_db_enabled=False,
     # -*- Production settings
     prd_env="prd",
     # -*- Production Apps
     prd_app_enabled=True,
     prd_api_enabled=True,
-    prd_redis_enabled=True,
+    prd_db_enabled=False,
     # -*- AWS settings
     # Region for AWS resources
     aws_region="us-east-1",
     # Availability Zones for AWS resources
     aws_az1="us-east-1a",
     aws_az2="us-east-1b",
-    # aws_az3="us-east-1c",
     # Subnet IDs for AWS resources
     # subnet_ids=None,
-    # Security Groups for AWS resources
-    # security_groups=None,
     # -*- Image Settings
     # Repository for images
     # image_repo="your-repo",

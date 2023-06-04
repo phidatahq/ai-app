@@ -2,12 +2,12 @@
 
 set -e
 
-CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CURR_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 WS_ROOT="$( dirname ${CURR_DIR} )"
-DOCKER_FILE="Dockerfile"
+DOCKER_FILE="workspace/jupyter/jupyter.Dockerfile"
 REPO="repo"
-NAME="ai-app"
-TAG="prd"
+NAME="jupyter-ai-app"
+TAG="dev"
 
 # Run docker buildx create --use before running this script
 echo "Running: docker buildx build --platform=linux/amd64,linux/arm64 -t $REPO/$NAME:$TAG -f $DOCKER_FILE $WS_ROOT --push"

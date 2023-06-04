@@ -1,12 +1,10 @@
 from os import getenv, environ
-from typing import Optional, Any
+from typing import Optional, List
 
 import openai
 import streamlit as st
 
-from utils.database import get_redis_connection, get_redis_results
-from utils.settings import assistant_settings
-
+from utils.message import Message
 
 #
 # -*- Sidebar component to get OpenAI API key
@@ -31,17 +29,6 @@ def get_openai_key() -> Optional[str]:
 
 
 #
-# -*- Sidebar component to select data source
-#
-def select_data_source() -> None:
-    # Get the data source
-    data_source = st.sidebar.radio("Select Data Source", options=["None", "F1 rules"])
-    if data_source:
-        st.session_state["data_source"] = data_source
-    st.sidebar.markdown(f"📊  Data source : {st.session_state['data_source']}")
-
-
-#
 # -*- Sidebar component to show status
 #
 def show_status():
@@ -51,8 +38,6 @@ def show_status():
         and st.session_state["OPENAI_API_KEY"] != ""
     ):
         st.sidebar.markdown("🔑  OpenAI API key set")
-    if "redis_client" in st.session_state:
-        st.sidebar.markdown("📡  Redis client available")
 
 
 #
@@ -76,9 +61,6 @@ def prompt_sidebar():
     if openai_key is None or openai_key == "" or openai_key == "sk-***":
         st.write("🔑  OpenAI API key not set")
 
-    # Choose data source
-    select_data_source()
-
     # Show status on sidebar
     show_status()
 
@@ -87,61 +69,41 @@ def prompt_sidebar():
 
 
 #
-# -*- Create redis client
-#
-def create_redis_client() -> Any:
-    # Get duckdb connection
-    redis_client = st.session_state.get("redis_client", None)
-    if redis_client is None:
-        redis_client = get_redis_connection()
-        st.session_state["redis_client"] = redis_client
-    return redis_client
-
-
-#
 # -*- Prompt Main UI
 #
-def prompt_main():
+def prompt_main() -> None:
     prompt = st.text_input(
-        "Enter your question here",
-        placeholder="what is the cost cap for a power unit in 2023",
+        "Enter your query here",
+        placeholder="Generate a list of 20 names of SQL AI assistants from star wars",
         key="input",
     )
 
     if prompt:
-        completion_prompt = prompt
-
-        if st.session_state["data_source"] != "None":
-            # -*- Get redis client
-            redis_client = create_redis_client()
-            if redis_client is None:
-                st.write("📡  Redis client not available")
-                return
-
-            # -*- Get results from redis
-            result_df = get_redis_results(
-                redis_client, prompt, assistant_settings.index_name
-            )
-
-            # -*- Create a Summary Prompt
-            completion_prompt = """Summarise the search results in a bulleted list to
-            answer the search query a customer has sent.
-            Search query: {}
-            Search result: {}
-            Summary:
-            """.format(
-                prompt, result_df["result"][0]
-            )
-
-        # -*- Generate completion
-        completion_result = openai.Completion.create(
-            engine=assistant_settings.completions_model,
-            prompt=completion_prompt,
-            max_tokens=500,
+        # -*- Create a System Prompt
+        system_prompt = (
+            "You are a helpful assistant that helps customers answer questions."
         )
 
+        # -*- Add the System Prompt to the conversation
+        messages: List = []
+        system_message = Message("system", system_prompt)
+        messages.append(system_message.message())
+
+        # -*- Add the user query to the conversation
+        user_message = Message("user", prompt)
+        messages.append(user_message.message())
+
+        # -*- Generate completion
+        completion_result = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages,
+            max_tokens=1024,
+            temperature=0,
+        )
+        result = completion_result["choices"][0]["message"]["content"]
+
         # -*- Write result
-        st.write(completion_result["choices"][0]["text"])
+        st.write(result)
 
 
 #
@@ -149,7 +111,6 @@ def prompt_main():
 #
 st.set_page_config(page_title="AI Prompt", page_icon="🔎", layout="wide")
 st.markdown("## Build a Prompt using your own data")
-st.write("Select a data source and ask a question")
 
 prompt_sidebar()
 prompt_main()
