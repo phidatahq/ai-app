@@ -154,6 +154,7 @@ prd_fastapi = FastApiServer(
     aws_secrets=[prd_app_secret],
     # aws_security_groups=[],
     create_load_balancer=True,
+    health_check_path="/v1/ping",
     env=container_env,
     use_cache=ws_settings.use_cache,
     save_output=save_output,
