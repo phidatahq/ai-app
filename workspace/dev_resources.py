@@ -19,51 +19,64 @@ dev_image = DockerImage(
     tag=ws_settings.dev_env,
     enabled=ws_settings.build_images,
     path=str(ws_settings.ws_root),
-    # Uncommen to use a specific platform for the image
-    # platform="linux/amd64",
     pull=ws_settings.force_pull_images,
-    # Uncomment to push dev images
-    # push_image=ws_settings.push_images,
+    push_image=ws_settings.push_images,
     skip_docker_cache=ws_settings.skip_image_cache,
 )
 
 # -*- Development database running on port 9315:5432
 dev_db = PostgresDb(
-    name="ai-db-dev",
+    name=f"{ws_settings.ws_name}-db",
     enabled=ws_settings.dev_db_enabled,
-    db_schema="ai",
+    image_name="phidata/pgvector",
+    image_tag="15",
+    db_schema="wynter",
     # Connect to this db on port 9315
     container_host_port=9315,
     # Read POSTGRES_USER and POSTGRES_PASSWORD from secrets/db_secrets.yml
-    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/db_secrets.yml"),
+    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/dev_db_secrets.yml"),
 )
+
+# -*- Build container environment
+container_env = {
+    # Get the OpenAI API key from the local environment
+    "OPENAI_API_KEY": getenv("OPENAI_API_KEY", None),
+    # Database configuration
+    "DB_HOST": dev_db.get_db_host_docker(),
+    "DB_PORT": dev_db.get_db_port_docker(),
+    "DB_USER": dev_db.get_db_user(),
+    "DB_PASS": dev_db.get_db_password(),
+    "DB_SCHEMA": dev_db.get_db_schema(),
+    # Upgrade database on startup using alembic. Used to create tables on first run.
+    # "UPGRADE_DB": True,
+    # Wait for database to be available before starting the server
+    # "WAIT_FOR_DB": True,
+}
 
 # -*- StreamlitApp running on port 9095
 dev_streamlit = StreamlitApp(
-    name="ai-app-dev",
+    name="ai-app",
     enabled=ws_settings.dev_app_enabled,
     image=dev_image,
     command="app start Home",
     mount_workspace=True,
-    # Get the OpenAI API key from the local environment
-    env={"OPENAI_API_KEY": getenv("OPENAI_API_KEY", "")},
+    env=container_env,
     use_cache=ws_settings.use_cache,
-    # Read secrets from secrets/app_secrets.yml
-    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/app_secrets.yml"),
+    # Read secrets from secrets/dev_app_secrets.yml
+    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/dev_app_secrets.yml"),
 )
 
 # -*- FastApiServer running on port 9090
 dev_fastapi = FastApiServer(
-    name="ai-api-dev",
+    name="ai-api",
     enabled=ws_settings.dev_api_enabled,
     image=dev_image,
     command="api start -r",
     mount_workspace=True,
-    # Get the OpenAI API key from the local environment
-    env={"OPENAI_API_KEY": getenv("OPENAI_API_KEY", "")},
+    env=container_env,
     use_cache=ws_settings.use_cache,
-    # Read secrets from secrets/api_secrets.yml
-    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/api_secrets.yml"),
+    # Read secrets from secrets/dev_app_secrets.yml
+    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/dev_app_secrets.yml"),
 )
 
 # -*- DockerConfig defining the dev resources

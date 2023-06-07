@@ -12,6 +12,7 @@ from phidata.aws.resource.group import (
     SecretsManager,
 )
 from phidata.docker.config import DockerConfig, DockerImage
+from phidata.resource.reference import Reference
 
 from workspace.settings import ws_settings
 
@@ -22,6 +23,8 @@ from workspace.settings import ws_settings
 skip_create: bool = False
 # Skip resource  deletion when running `phi ws down`
 skip_delete: bool = False
+# Save resource outputs to workspace/outputs
+save_output: bool = True
 
 # -*- Production Image
 prd_image = DockerImage(
@@ -41,10 +44,19 @@ prd_data_s3_bucket = S3Bucket(
     acl="private",
 )
 
-# -*- Secrets manager for production secrets
-prd_secrets = SecretsManager(
-    name=f"{ws_settings.prd_key}-secrets",
-    secrets_dir=ws_settings.ws_root.joinpath("workspace/secrets"),
+# -*- Secrets for production database
+prd_db_secret = SecretsManager(
+    name=f"{ws_settings.prd_key}-db-secret",
+    secret_files=[ws_settings.ws_root.joinpath("workspace/secrets/prd_db_secrets.yml")],
+    save_output=save_output,
+)
+# -*- Secrets for production application
+prd_app_secret = SecretsManager(
+    name=f"{ws_settings.prd_key}-app-secret",
+    secret_files=[
+        ws_settings.ws_root.joinpath("workspace/secrets/prd_app_secrets.yml")
+    ],
+    save_output=save_output,
 )
 
 # -*- RDS Database Subnet Group
@@ -54,6 +66,7 @@ prd_db_subnet_group = DbSubnetGroup(
     subnet_ids=ws_settings.subnet_ids,
     skip_create=skip_create,
     skip_delete=skip_delete,
+    save_output=save_output,
 )
 
 # -*- RDS Database Instance
@@ -71,11 +84,13 @@ prd_db = DbInstance(
     availability_zone=ws_settings.aws_az1,
     db_subnet_group=prd_db_subnet_group,
     enable_performance_insights=True,
+    aws_secret=prd_db_secret,
     # vpc_security_group_ids=[],
-    # Read MASTER_USERNAME and MASTER_USER_PASSWORD from secrets/db_secrets.yml
-    secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/db_secrets.yml"),
+    # Read MASTER_USERNAME and MASTER_USER_PASSWORD from secrets/prd_db_secrets.yml
+    # secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/prd_db_secrets.yml"),
     skip_create=skip_create,
     skip_delete=skip_delete,
+    save_output=save_output,
 )
 
 # -*- ECS cluster
@@ -86,38 +101,63 @@ prd_ecs_cluster = EcsCluster(
     capacity_providers=[launch_type],
 )
 
+# -*- Build container environment
+container_env = {
+    # Get the OpenAI API key from the local environment
+    "OPENAI_API_KEY": getenv("OPENAI_API_KEY", ""),
+}
+if prd_db.enabled:
+    container_env.update({
+        # Database configuration
+        "DB_HOST": Reference(prd_db.get_db_endpoint),
+        "DB_PORT": Reference(prd_db.get_db_port),
+        "DB_USER": Reference(prd_db.get_master_username),
+        "DB_PASS": Reference(prd_db.get_master_user_password),
+        "DB_SCHEMA": Reference(prd_db.get_db_name),
+        # Upgrade database on startup using alembic. Used to create tables on first run.
+        # "UPGRADE_DB": True,
+        # Wait for database to be available before starting the server
+        # "WAIT_FOR_DB": True,
+    })
+
 # -*- StreamlitApp running on ECS
 prd_streamlit = StreamlitApp(
-    name="ai-app-prd",
+    name="ai-app",
     enabled=ws_settings.prd_app_enabled,
     image=prd_image,
     command=["app", "start", "Home"],
     ecs_task_cpu="1024",
     ecs_task_memory="2048",
     ecs_cluster=prd_ecs_cluster,
-    aws_secrets=[prd_secrets],
     aws_subnets=ws_settings.subnet_ids,
+    aws_secrets=[prd_app_secret],
     # aws_security_groups=[],
-    # Get the OpenAI API key from the local environment
-    env={"OPENAI_API_KEY": getenv("OPENAI_API_KEY", "")},
+    create_load_balancer=True,
+    env=container_env,
     use_cache=ws_settings.use_cache,
+    save_output=save_output,
+    # Read secrets from secrets/app_secrets.yml
+    # secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/app_secrets.yml"),
 )
 
 # -*- FastApiServer running on ECS
 prd_fastapi = FastApiServer(
-    name="ai-api-prd",
+    name="ai-api",
     enabled=ws_settings.prd_api_enabled,
     image=prd_image,
     command=["api", "start"],
     ecs_task_cpu="1024",
     ecs_task_memory="2048",
     ecs_cluster=prd_ecs_cluster,
-    aws_secrets=[prd_secrets],
     aws_subnets=ws_settings.subnet_ids,
+    aws_secrets=[prd_app_secret],
     # aws_security_groups=[],
-    # Get the OpenAI API key from the local environment
-    env={"OPENAI_API_KEY": getenv("OPENAI_API_KEY", "")},
+    create_load_balancer=True,
+    env=container_env,
     use_cache=ws_settings.use_cache,
+    save_output=save_output,
+    # Read secrets from secrets/prd_app_secrets.yml
+    # secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/prd_app_secrets.yml"),
 )
 
 # -*- DockerConfig defining the prd resources
@@ -134,7 +174,7 @@ prd_aws_config = AwsConfig(
     resources=AwsResourceGroup(
         db_instances=[prd_db],
         db_subnet_groups=[prd_db_subnet_group],
-        secrets=[prd_secrets],
+        secrets=[prd_db_secret, prd_app_secret],
         s3_buckets=[prd_data_s3_bucket],
     ),
 )

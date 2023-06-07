@@ -16,6 +16,11 @@ dependencies = [
   "fastapi",
   "typer",
   "uvicorn",
+  # Database Libraries
+  "alembic",
+  "pgvector",
+  "psycopg2-binary",
+  "sqlalchemy",
   # Project Libraries
   "openai",
   "requests",
@@ -37,7 +42,7 @@ dependencies = [
   # Linting
   "ruff",
   # phidata
-  "phidata==1.6.20",
+  "phidata==1.6.22",
   # Pin for dependency resolution
   "cryptography==39.0.2",
 ]
@@ -51,7 +56,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["api", "app", "notebooks", "tests", "utils", "workspace"]
+packages = ["api", "app", "db", "notebooks","tests", "utils", "workspace"]
 
 # Change this value to use a different directory for the phidata workspace.
 # [tool.phidata]
@@ -78,10 +83,10 @@ exclude = [
 
 [[tool.mypy.overrides]]
 module = [
-  "langchain.*",
   "pandas.*",
   "phidata.*",
   "pyarrow.*",
+  "langchain.*",
   "setuptools.*",
   "streamlit_chat.*",
 ]

@@ -17,12 +17,13 @@ jupyter_image = DockerImage(
     path=str(ws_settings.ws_root),
     dockerfile="workspace/jupyter/jupyter.Dockerfile",
     pull=ws_settings.force_pull_images,
+    push_image=ws_settings.push_images,
     skip_docker_cache=ws_settings.skip_image_cache,
 )
 
 # -*- Jupyter running on port 8888
 dev_jupyter = Jupyter(
-    name="ai-jupyter",
+    name=f"{ws_settings.ws_name}-jupyter",
     enabled=ws_settings.dev_jupyter_enabled,
     image=jupyter_image,
     mount_workspace=True,
