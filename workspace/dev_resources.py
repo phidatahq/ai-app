@@ -30,7 +30,7 @@ dev_db = PostgresDb(
     enabled=ws_settings.dev_db_enabled,
     image_name="phidata/pgvector",
     image_tag="15",
-    db_schema="wynter",
+    db_schema="ai",
     # Connect to this db on port 9315
     container_host_port=9315,
     # Read POSTGRES_USER and POSTGRES_PASSWORD from secrets/db_secrets.yml
@@ -40,22 +40,27 @@ dev_db = PostgresDb(
 # -*- Build container environment
 container_env = {
     # Get the OpenAI API key from the local environment
-    "OPENAI_API_KEY": getenv("OPENAI_API_KEY", None),
-    # Database configuration
-    "DB_HOST": dev_db.get_db_host_docker(),
-    "DB_PORT": dev_db.get_db_port_docker(),
-    "DB_USER": dev_db.get_db_user(),
-    "DB_PASS": dev_db.get_db_password(),
-    "DB_SCHEMA": dev_db.get_db_schema(),
-    # Upgrade database on startup using alembic. Used to create tables on first run.
-    # "UPGRADE_DB": True,
-    # Wait for database to be available before starting the server
-    # "WAIT_FOR_DB": True,
+    "OPENAI_API_KEY": getenv("OPENAI_API_KEY", None)
 }
+if ws_settings.dev_db_enabled:
+    container_env.update(
+        {
+            # Database configuration
+            "DB_HOST": dev_db.get_db_host_docker(),
+            "DB_PORT": dev_db.get_db_port_docker(),
+            "DB_USER": dev_db.get_db_user(),
+            "DB_PASS": dev_db.get_db_password(),
+            "DB_SCHEMA": dev_db.get_db_schema(),
+            # Upgrade database on startup using alembic. Used to create tables on first run.
+            # "UPGRADE_DB": True,
+            # Wait for database to be available before starting the server
+            # "WAIT_FOR_DB": True,
+        }
+    )
 
 # -*- StreamlitApp running on port 9095
 dev_streamlit = StreamlitApp(
-    name="ai-app",
+    name=f"{ws_settings.dev_key}-app",
     enabled=ws_settings.dev_app_enabled,
     image=dev_image,
     command="app start Home",
@@ -68,7 +73,7 @@ dev_streamlit = StreamlitApp(
 
 # -*- FastApiServer running on port 9090
 dev_fastapi = FastApiServer(
-    name="ai-api",
+    name=f"{ws_settings.dev_key}-api",
     enabled=ws_settings.dev_api_enabled,
     image=dev_image,
     command="api start -r",

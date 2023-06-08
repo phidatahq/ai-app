@@ -108,22 +108,24 @@ container_env = {
     "OPENAI_API_KEY": getenv("OPENAI_API_KEY", ""),
 }
 if prd_db.enabled:
-    container_env.update({
-        # Database configuration
-        "DB_HOST": Reference(prd_db.get_db_endpoint),
-        "DB_PORT": Reference(prd_db.get_db_port),
-        "DB_USER": Reference(prd_db.get_master_username),
-        "DB_PASS": Reference(prd_db.get_master_user_password),
-        "DB_SCHEMA": Reference(prd_db.get_db_name),
-        # Upgrade database on startup using alembic. Used to create tables on first run.
-        # "UPGRADE_DB": True,
-        # Wait for database to be available before starting the server
-        # "WAIT_FOR_DB": True,
-    })
+    container_env.update(
+        {
+            # Database configuration
+            "DB_HOST": Reference(prd_db.get_db_endpoint),
+            "DB_PORT": Reference(prd_db.get_db_port),
+            "DB_USER": Reference(prd_db.get_master_username),
+            "DB_PASS": Reference(prd_db.get_master_user_password),
+            "DB_SCHEMA": Reference(prd_db.get_db_name),
+            # Upgrade database on startup using alembic. Used to create tables on first run.
+            # "UPGRADE_DB": True,
+            # Wait for database to be available before starting the server
+            # "WAIT_FOR_DB": True,
+        }
+    )
 
 # -*- StreamlitApp running on ECS
 prd_streamlit = StreamlitApp(
-    name="ai-app",
+    name=f"{ws_settings.prd_key}-app",
     enabled=ws_settings.prd_app_enabled,
     image=prd_image,
     command=["app", "start", "Home"],
@@ -137,13 +139,13 @@ prd_streamlit = StreamlitApp(
     env=container_env,
     use_cache=ws_settings.use_cache,
     save_output=save_output,
-    # Read secrets from secrets/app_secrets.yml
-    # secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/app_secrets.yml"),
+    # Read secrets from secrets/prd_app_secrets.yml
+    # secrets_file=ws_settings.ws_root.joinpath("workspace/secrets/prd_app_secrets.yml"),
 )
 
 # -*- FastApiServer running on ECS
 prd_fastapi = FastApiServer(
-    name="ai-api",
+    name=f"{ws_settings.prd_key}-app",
     enabled=ws_settings.prd_api_enabled,
     image=prd_image,
     command=["api", "start"],
