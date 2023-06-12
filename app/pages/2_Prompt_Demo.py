@@ -6,6 +6,7 @@ import streamlit as st
 
 from utils.message import Message
 
+
 #
 # -*- Sidebar component to get OpenAI API key
 #
