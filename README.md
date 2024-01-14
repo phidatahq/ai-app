@@ -1,6 +1,6 @@
-## LLM App
+## AI App
 
-This repo contains the code for running an LLM App in 2 environments:
+This repo contains the code for running an AI App in 2 environments:
 
 1. `dev`: A development environment running locally on docker
 2. `prd`: A production environment running on AWS ECS
@@ -42,7 +42,7 @@ cp -r workspace/example_secrets workspace/secrets
 cp example.env .env
 ```
 
-## Run LLM App locally
+## Run AI App locally
 
 1. Install [docker desktop](https://www.docker.com/products/docker-desktop)
 
@@ -74,7 +74,7 @@ phi ws down
 
 ## Next Steps:
 
-- [Run the LLM App on AWS](https://docs.phidata.com/templates/ai-app/run-aws)
+- [Run the AI App on AWS](https://docs.phidata.com/templates/ai-app/run-aws)
 - Read how to [manage the development application](https://docs.phidata.com/how-to/development-app)
 - Read how to [manage the production application](https://docs.phidata.com/how-to/production-app)
 - Read how to [add python libraries](https://docs.phidata.com/how-to/python-libraries)
@@ -82,4 +82,4 @@ phi ws down
 - Read how to [manage secrets](https://docs.phidata.com/how-to/secrets)
 - Add [CI/CD](https://docs.phidata.com/how-to/ci-cd)
 - Add [database tables](https://docs.phidata.com/how-to/database-tables)
-- Read the [LLM App guide](https://docs.phidata.com/templates/ai-app)
+- Read the [AI App guide](https://docs.phidata.com/templates/ai-app)
