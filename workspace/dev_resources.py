@@ -29,9 +29,9 @@ dev_image = DockerImage(
 dev_db = PgVectorDb(
     name=f"{ws_settings.ws_name}-db",
     enabled=ws_settings.dev_db_enabled,
-    pg_user="ai",
-    pg_password="ai",
-    pg_database="ai",
+    pg_user="app",
+    pg_password="app",
+    pg_database="app",
     # Connect to this db on port 5432
     host_port=5432,
     debug_mode=True,

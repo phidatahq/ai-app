@@ -49,7 +49,7 @@ class ApiSettings(BaseSettings):
         if runtime_env == "dev":
             # 8501 is the default port for streamlit
             # 3000 is the default port for create-react-app
-            valid_cors.extend(["http://localhost:8501", "http://localhost:3000"])
+            valid_cors.extend(["http://localhost", "http://localhost:8501", "http://localhost:3000"])
 
         return valid_cors
 
