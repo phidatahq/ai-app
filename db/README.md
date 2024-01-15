@@ -35,7 +35,7 @@ docker exec -it ai-api alembic -c db/alembic.ini upgrade head
 ```bash
 ECS_CLUSTER=ai-app-prd-cluster
 TASK_ARN=$(aws ecs list-tasks --cluster ai-app-prd-cluster --query "taskArns[0]" --output text)
-CONTAINER_NAME=ai-api
+CONTAINER_NAME=ai-api-prd
 
 aws ecs execute-command --cluster $ECS_CLUSTER \
     --task $TASK_ARN \
