@@ -7,7 +7,7 @@ from ai.settings import ai_settings
 from ai.storage import vision_assistant_storage
 
 
-def get_vision_assistant(
+def get_image_assistant(
     run_id: Optional[str] = None,
     user_id: Optional[str] = None,
     debug_mode: bool = False,
