@@ -23,8 +23,6 @@ skip_delete: bool = False
 save_output: bool = True
 # Create load balancer for the application
 create_load_balancer: bool = True
-# Key used for naming production resources: ai-app-prd
-prd_key: str = f"{ws_settings.ws_name}-{ws_settings.prd_env}"
 
 # -*- Production image
 prd_image = DockerImage(
@@ -40,7 +38,7 @@ prd_image = DockerImage(
 
 # -*- S3 bucket for production data (set enabled=True when needed)
 prd_bucket = S3Bucket(
-    name=f"{prd_key}-data",
+    name=f"{ws_settings.prd_key}-data",
     enabled=False,
     acl="private",
     skip_delete=skip_delete,
@@ -49,7 +47,7 @@ prd_bucket = S3Bucket(
 
 # -*- Secrets for production application
 prd_secret = SecretsManager(
-    name=f"{prd_key}-secret",
+    name=f"{ws_settings.prd_key}-secret",
     group="app",
     # Create secret from workspace/secrets/prd_app_secrets.yml
     secret_files=[ws_settings.ws_root.joinpath("workspace/secrets/prd_app_secrets.yml")],
@@ -58,7 +56,7 @@ prd_secret = SecretsManager(
 )
 # -*- Secrets for production database
 prd_db_secret = SecretsManager(
-    name=f"{prd_key}-db-secret",
+    name=f"{ws_settings.prd_key}-db-secret",
     group="db",
     # Create secret from workspace/secrets/prd_db_secrets.yml
     secret_files=[ws_settings.ws_root.joinpath("workspace/secrets/prd_db_secrets.yml")],
@@ -68,7 +66,7 @@ prd_db_secret = SecretsManager(
 
 # -*- Security Group for the load balancer
 prd_lb_sg = SecurityGroup(
-    name=f"{prd_key}-lb-security-group",
+    name=f"{ws_settings.prd_key}-lb-security-group",
     enabled=create_load_balancer,
     group="app",
     description="Security group for the load balancer",
@@ -89,7 +87,7 @@ prd_lb_sg = SecurityGroup(
 )
 # -*- Security Group for the application
 prd_sg = SecurityGroup(
-    name=f"{prd_key}-security-group",
+    name=f"{ws_settings.prd_key}-security-group",
     enabled=ws_settings.prd_api_enabled or ws_settings.prd_app_enabled,
     group="app",
     description="Security group for the production application",
@@ -112,7 +110,7 @@ prd_sg = SecurityGroup(
 # -*- Security Group for the database
 prd_db_port = 5432
 prd_db_sg = SecurityGroup(
-    name=f"{prd_key}-db-security-group",
+    name=f"{ws_settings.prd_key}-db-security-group",
     enabled=ws_settings.prd_db_enabled,
     group="db",
     description="Security group for the production database",
@@ -130,7 +128,7 @@ prd_db_sg = SecurityGroup(
 
 # -*- RDS Database Subnet Group
 prd_db_subnet_group = DbSubnetGroup(
-    name=f"{prd_key}-db-sg",
+    name=f"{ws_settings.prd_key}-db-sg",
     enabled=ws_settings.prd_db_enabled,
     group="db",
     subnet_ids=ws_settings.subnet_ids,
@@ -140,7 +138,7 @@ prd_db_subnet_group = DbSubnetGroup(
 
 # -*- RDS Database Instance
 prd_db = DbInstance(
-    name=f"{prd_key}-db",
+    name=f"{ws_settings.prd_key}-db",
     enabled=ws_settings.prd_db_enabled,
     group="db",
     db_name="app",
@@ -166,8 +164,8 @@ prd_db = DbInstance(
 # -*- ECS cluster
 launch_type = "FARGATE"
 prd_ecs_cluster = EcsCluster(
-    name=f"{prd_key}-cluster",
-    ecs_cluster_name=prd_key,
+    name=f"{ws_settings.prd_key}-cluster",
+    ecs_cluster_name=ws_settings.prd_key,
     capacity_providers=[launch_type],
     skip_delete=skip_delete,
     save_output=save_output,
@@ -192,7 +190,7 @@ container_env = {
 
 # -*- Streamlit running on ECS
 prd_streamlit = Streamlit(
-    name="ai-app-prd",
+    name=f"{ws_settings.prd_key}-app",
     enabled=ws_settings.prd_app_enabled,
     group="app",
     image=prd_image,
@@ -222,7 +220,7 @@ prd_streamlit = Streamlit(
 
 # -*- FastApi running on ECS
 prd_fastapi = FastApi(
-    name="ai-api-prd",
+    name=f"{ws_settings.prd_key}-api",
     enabled=ws_settings.prd_api_enabled,
     group="app",
     image=prd_image,

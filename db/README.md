@@ -33,9 +33,9 @@ docker exec -it ai-api alembic -c db/alembic.ini upgrade head
 2. **OR** you can SSH into the production container to run the migration manually
 
 ```bash
-ECS_CLUSTER=ai-app-prd-cluster
-TASK_ARN=$(aws ecs list-tasks --cluster ai-app-prd-cluster --query "taskArns[0]" --output text)
-CONTAINER_NAME=ai-api-prd
+ECS_CLUSTER=ai-prd-cluster
+TASK_ARN=$(aws ecs list-tasks --cluster ai-prd-cluster --query "taskArns[0]" --output text)
+CONTAINER_NAME=ai-prd-api
 
 aws ecs execute-command --cluster $ECS_CLUSTER \
     --task $TASK_ARN \

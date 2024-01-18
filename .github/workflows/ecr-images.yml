@@ -41,7 +41,7 @@ jobs:
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.ECR_REPO }}/ai-app:dev, ${{ env.ECR_REPO }}/ai-app:prd
+          tags: ${{ env.ECR_REPO }}/ai:dev, ${{ env.ECR_REPO }}/ai:prd
 
   build-jupyter-image:
     runs-on: ubuntu-latest
@@ -70,4 +70,4 @@ jobs:
           file: workspace/jupyter/jupyter.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ env.ECR_REPO }}/jupyter-ai-app:dev
+          tags: ${{ env.ECR_REPO }}/jupyter-ai:dev
