@@ -26,12 +26,10 @@ dependencies = [
   "types-Pillow",
   # Type checking
   "mypy",
-  # Testing
-  "pytest",
   # Linting and Formatting
   "ruff",
   # phidata
-  "phidata==2.3.5",
+  "phidata==2.3.13",
 ]
 
 [build-system]
@@ -48,7 +46,7 @@ build-backend = "setuptools.build_meta"
 line-length = 110
 extend-include = ["*.ipynb"]
 exclude = ["aienv*", ".venv*"]
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Ignore `F401` (import violations) in all `__init__.py` files
 "__init__.py" = ["F401"]
 "*.ipynb" = ["E402"]
@@ -63,6 +61,3 @@ exclude = ["aienv*", ".venv*"]
 [[tool.mypy.overrides]]
 module = ["pgvector.*", "setuptools.*"]
 ignore_missing_imports = true
-
-[tool.pytest.ini_options]
-testpaths = "tests"

@@ -12,7 +12,7 @@ from ai.storage import pdf_assistant_storage
 from utils.log import logger
 
 ######################################################
-## Router for PDF Assistants
+## Router for Serving Assistants
 ######################################################
 
 assistants_router = APIRouter(prefix=endpoints.ASSISTANTS, tags=["Assistants"])

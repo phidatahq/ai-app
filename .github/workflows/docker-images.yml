@@ -30,7 +30,7 @@ jobs:
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_REPO }}/ai:dev, ${{ secrets.DOCKERHUB_REPO }}/ai:prd
+          tags: ${{ secrets.DOCKERHUB_REPO }}/ai-app:dev, ${{ secrets.DOCKERHUB_REPO }}/ai-app:prd
 
   build-jupyter-image:
     runs-on: ubuntu-latest
@@ -54,4 +54,4 @@ jobs:
           file: workspace/jupyter/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_REPO }}/jupyter-ai:dev
+          tags: ${{ secrets.DOCKERHUB_REPO }}/jupyter-ai-app:dev

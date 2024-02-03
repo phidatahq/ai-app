@@ -6,7 +6,7 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WS_ROOT="$( dirname ${CURR_DIR} )"
 DOCKERFILE="workspace/jupyter/Dockerfile"
 REPO="repo"
-NAME="jupyter-ai"
+NAME="jupyter-ai-app"
 TAG="dev"
 
 # Run docker buildx create --use before running this script

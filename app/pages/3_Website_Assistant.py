@@ -14,9 +14,12 @@ from ai.assistants.website_auto import get_autonomous_website_assistant
 from ai.assistants.website_rag import get_rag_website_assistant
 from utils.log import logger
 
-
-st.title(":snowman: Website Assistant")
-st.markdown('<a href="https://github.com/phidatahq/phidata"><h4>by phidata</h4></a>', unsafe_allow_html=True)
+st.set_page_config(
+    page_title="Website AI",
+    page_icon=":orange_heart:",
+)
+st.title("Website Assistant")
+st.markdown("##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)")
 
 
 def restart_assistant():
@@ -34,7 +37,8 @@ def main() -> None:
     if username:
         st.sidebar.info(f":technologist: User: {username}")
     else:
-        st.write(":technologist: Please enter a username")
+        st.markdown("---")
+        st.markdown("#### :technologist: Enter a username, load a website and start chatting")
         return
 
     # Get assistant type
@@ -135,13 +139,12 @@ def main() -> None:
     website_knowledge_base: WebsiteKnowledgeBase = website_assistant.knowledge_base  # type: ignore
     if website_knowledge_base:
         website_url = st.sidebar.text_input("Add Website to Knowledge Base")
-        if website_url != "":
-            if website_url not in website_knowledge_base.urls:
-                website_knowledge_base.urls.append(website_url)
-                loading_container = st.sidebar.info(f"🧠 Loading {website_url}")
-                website_knowledge_base.load()
-                st.session_state["website_knowledge_base_loaded"] = True
-                loading_container.empty()
+        if website_url != "" and website_url not in website_knowledge_base.urls:
+            website_knowledge_base.urls.append(website_url)
+            loading_container = st.sidebar.info(f"🧠 Loading {website_url}")
+            website_knowledge_base.load()
+            st.session_state["website_knowledge_base_loaded"] = True
+            loading_container.empty()
 
     if website_assistant.storage:
         website_assistant_run_ids: List[str] = website_assistant.storage.get_all_run_ids(user_id=username)
