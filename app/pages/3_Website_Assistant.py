@@ -110,11 +110,12 @@ def main() -> None:
     if last_message.get("role", "") == "user":
         question = last_message["content"]
         with st.chat_message("assistant"):
-            response = ""
-            resp_container = st.empty()
-            for delta in website_assistant.run(question):
-                response += delta  # type: ignore
-                resp_container.markdown(response)
+            with st.spinner("Working..."):
+                response = ""
+                resp_container = st.empty()
+                for delta in website_assistant.run(question):
+                    response += delta  # type: ignore
+                    resp_container.markdown(response)
 
             st.session_state["messages"].append({"role": "assistant", "content": response})
 
