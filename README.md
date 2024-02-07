@@ -63,7 +63,7 @@ phi ws up
 ```
 
 - Open [localhost:8501](http://localhost:8501) to view the Streamlit App.
-- Open [localhost:8000/docs](http://localhost:8000/docs) to view the FastApi docs.
+- If FastApi is enabled, Open [localhost:8000/docs](http://localhost:8000/docs) to view the FastApi docs.
 - If Jupyter is enabled, open [localhost:8888](http://localhost:8888) to view JupyterLab UI.
 
 4. Stop the workspace using:
