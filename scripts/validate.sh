@@ -4,8 +4,7 @@
 #
 # Run this script to validate the workspace:
 # 1. Type check using mypy
-# 2. Test using pytest
-# 3. Lint using ruff
+# 2. Lint using ruff
 # Usage:
 #   ./scripts/validate.sh
 ############################################################################
